@@ -81,6 +81,18 @@ class Application(tk.Frame):
         print ("The input is:", value)
         print ("And your error is:",value-self.correlation)
 
+        absdiff = np.abs(value-self.correlation)
+        diff = value-self.correlation
+
+        if absdiff<0.1:
+            tk.messagebox.showinfo("Good job!", "You were "+str(diff)+" points far.")
+        elif absdiff < 0.3:
+            tk.messagebox.showwarning("Almost... Keep up!", "You were "+str(diff)+" points far.")
+        else:
+            tk.messagebox.showerror("Oh, gosh! No!", "You were "+str(diff)+" points far.")
+        self.master.destroy()
+
+
     def add_plot(self):
         #GENERATE FIGURE:
         fig = Figure(figsize=(5, 4), dpi=100)
