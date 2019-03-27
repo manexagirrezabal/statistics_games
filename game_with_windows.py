@@ -35,12 +35,13 @@ class Application(tk.Frame):
         self.p = []
         for i in range(n):
             print ("Create frame no.",i)
-            
 
             frame=tk.Frame(self.master)
             frame.nextbutton=tk.Button(frame,text='next',command=self.next,compound=tk.BOTTOM)
+            frame.nextbutton.config (height=3, width=10)
             frame.nextbutton.grid(column=5,row=3)
             frame.backbutton=tk.Button(frame,text='back',command=self.back,compound=tk.BOTTOM)
+            frame.backbutton.config (height=3, width=10)
             frame.backbutton.grid(column=0,row=3)
             frame.label=tk.Label(frame,text='Exercise no. %i: Can you guess the correlation?'%(i+1)).grid(column=0,row=0)
 
@@ -81,12 +82,6 @@ class Application(tk.Frame):
         absdiff = np.abs(value-correlation)
         diff = value-correlation
 
-        if absdiff<0.1:
-            tk.messagebox.showinfo("Good job!", "The actual correlation was "+str(correlation))
-        elif absdiff < 0.3:
-            tk.messagebox.showwarning("Almost... Keep up!", "The actual correlation was "+str(correlation))
-        else:
-            tk.messagebox.showerror("Oh, gosh! No!", "The actual correlation was "+str(correlation))
 
         self.check_all_values()
 
@@ -95,7 +90,18 @@ class Application(tk.Frame):
         if np.sum(values=="")==0:
             actual_correlations = np.array([eachf.correlation for eachf in self.p])
             print (values.astype(float))
+            print (actual_correlations)
             #TODO CHECK SCORE AND SHOW IT!
+
+            score = ((len(values)*2)-np.sum(np.abs(actual_correlations-values.astype(float))))/(len(values)*2)
+            print ("SCORE:",score)
+            if score>0.9:
+                tk.messagebox.showinfo("Good job!", "The actual correlation was ")
+            elif score > 0.7:
+                tk.messagebox.showwarning("Almost... Keep up!", "The actual correlation was ")
+            else:
+                tk.messagebox.showerror("Oh, gosh! No!", "The actual correlation was ")
+
 
 
     def next(self):
@@ -118,7 +124,7 @@ class Application(tk.Frame):
 
     def create_data(self, i):
 
-        corr=np.random.random()
+        corr=np.random.random()*2-1
         x,y = generateCorrelatedData(corr)
         correlation = round(pearsonr(x,y)[0],2)
 
